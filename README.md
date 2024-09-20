@@ -29,14 +29,14 @@ Desenvolver um sistema inteligente para a programação de cardápios mensais pe
 * CSS/SCSS: Para estilização das páginas e componentes.
 * HTML: Linguagem de marcação para estruturar as páginas.
 
-##Backend
+## Backend
 * Python: Linguagem de programação para a criação do algoritmo de IA.
 * Flask: Framework web para implementar as rotas e a lógica do backend.
 * Pandas: Biblioteca para manipulação de dados e integração com arquivos Excel.
 * Scikit-learn: Para o desenvolvimento do algoritmo de IA, utilizando técnicas como K-Nearest Neighbors (KNN) para sugerir combinações de receitas.
 * SQLite: Banco de dados leve para armazenar receitas e cardápios.
 
-##Teste e Qualidade
+## Teste e Qualidade
 ~Desenvolver aqui ainda!
 
 # Requisitos do Projeto
