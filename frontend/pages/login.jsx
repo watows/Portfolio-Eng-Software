@@ -260,30 +260,34 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
+  
     try {
       const response = await fetch('http://localhost:5000/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, senha: password }), // "senha" deve corresponder ao que seu backend espera
+        body: JSON.stringify({ email, senha: password }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Login falhou! Verifique seu e-mail e senha.');
       }
-
-      // Redirecionar para a página "home" sem exibir mensagem
+  
+      const data = await response.json();
+      const token = data.token;
+  
+      localStorage.setItem("authToken", token);
+  
       router.push("/home");
     } catch (error) {
       console.error(error);
-      alert(error.message); // Opcional: exibir mensagem de erro
+      alert(error.message);
     }
   };
 
   const handleRegisterRedirect = () => {
-    router.push("/cadastro"); // Redireciona para a página de cadastro
+    router.push("/cadastro");
   };
 
   useEffect(() => {
