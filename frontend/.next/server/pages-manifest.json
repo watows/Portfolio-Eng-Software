@@ -2,7 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/configuracoes": "pages/configuracoes.js",
   "/home": "pages/home.js",
-  "/cardapio/gerar": "pages/cardapio/gerar.js",
-  "/receita/incluir": "pages/receita/incluir.js"
+  "/cadastro": "pages/cadastro.js"
 }
