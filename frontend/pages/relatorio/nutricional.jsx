@@ -6,6 +6,7 @@ import { AiOutlineCalendar } from "react-icons/ai";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import withAuth from "../../components/autenticacao";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -213,4 +214,4 @@ const RelatorioNutricional = () => {
   );
 };
 
-export default RelatorioNutricional;
+export default withAuth(RelatorioNutricional);

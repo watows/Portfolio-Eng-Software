@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { VscArrowCircleLeft } from "react-icons/vsc";
+import withAuth from "../../components/autenticacao";
 
 const ExcluirReceita = () => {
   const router = useRouter();
@@ -254,4 +255,4 @@ const ExcluirReceita = () => {
   );
 };
 
-export default ExcluirReceita;
+export default withAuth(ExcluirReceita);

@@ -4,6 +4,7 @@ import { VscArrowCircleLeft } from "react-icons/vsc";
 import { AiOutlineCalendar } from "react-icons/ai";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import withAuth from "../../components/autenticacao";
 
 const VisualizacaoMensal = () => {
   const router = useRouter();
@@ -185,4 +186,4 @@ const VisualizacaoMensal = () => {
   );
 };
 
-export default VisualizacaoMensal;
+export default withAuth(VisualizacaoMensal);

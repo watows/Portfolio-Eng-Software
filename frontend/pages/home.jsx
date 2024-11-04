@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { AiFillSetting, AiFillSignature, AiFillReconciliation, AiFillEye, AiFillBulb } from "react-icons/ai";
+import withAuth from "../components/autenticacao";
 
 const Home = () => {
   const router = useRouter();
@@ -194,4 +195,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default withAuth(Home);

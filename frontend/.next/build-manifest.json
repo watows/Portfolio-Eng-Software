@@ -23,15 +23,25 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/configuracoes": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/configuracoes.js"
-    ],
     "/home": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/home.js"
+    ],
+    "/receita/buscar": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/receita/buscar.js"
+    ],
+    "/receita/editar": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/receita/editar.js"
+    ],
+    "/receita/incluir": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/receita/incluir.js"
     ]
   },
   "ampFirstPages": []

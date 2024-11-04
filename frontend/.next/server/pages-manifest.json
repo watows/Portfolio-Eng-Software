@@ -2,7 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/configuracoes": "pages/configuracoes.js",
+  "/receita/editar": "pages/receita/editar.js",
   "/home": "pages/home.js",
-  "/cadastro": "pages/cadastro.js"
+  "/receita/buscar": "pages/receita/buscar.js",
+  "/receita/incluir": "pages/receita/incluir.js",
+  "/api/receitas/buscar": "pages/api/receitas/buscar.js"
 }

@@ -4,6 +4,7 @@ import { VscArrowCircleLeft } from "react-icons/vsc";
 import { AiOutlineCalendar } from "react-icons/ai";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import withAuth from "../../components/autenticacao";
 
 const GerarCardapio = () => {
   const router = useRouter();
@@ -56,7 +57,8 @@ const GerarCardapio = () => {
         padding: "20px",
         fontFamily: "var(--font-family-ui)",
         color: "rgba(0, 100, 166, 0.50)",
-        minHeight: "100vh",
+        height: "100%",
+        overflowY: "auto",
       }}
     >
       <div style={{ position: "fixed", top: "0", width: "100%", display: "flex", alignItems: "center", backgroundColor: "#ffffff", zIndex: 1000, padding: "10px 0" }}>
@@ -185,4 +187,4 @@ const GerarCardapio = () => {
   );
 };
 
-export default GerarCardapio;
+export default withAuth(GerarCardapio);

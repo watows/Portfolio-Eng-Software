@@ -1,3 +1,4 @@
+// pages/relatorio/custo.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { VscArrowCircleLeft } from "react-icons/vsc";
@@ -5,15 +6,8 @@ import { AiOutlineCalendar } from "react-icons/ai";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import withAuth from "../../components/autenticacao"; // Importa o HOC com o nome correto
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -223,4 +217,4 @@ const RelatorioCusto = () => {
   );
 };
 
-export default RelatorioCusto;
+export default withAuth(RelatorioCusto);
