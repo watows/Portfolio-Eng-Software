@@ -104,3 +104,49 @@ def inserir_receita(dados):
     finally:
         cursor.close()
         conn.close()
+
+def excluir_receita_por_id(receita_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("DELETE FROM receitas WHERE id = %s", (receita_id,))
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            return False, "Receita não encontrada para exclusão"
+
+        return True, "Receita excluída com sucesso"
+    except Exception as e:
+        logger.error(f"Erro ao excluir receita: {e}")
+        return False, "Erro ao excluir a receita"
+    finally:
+        cursor.close()
+        conn.close()
+
+def inserir_receita(dados):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        query = """
+        INSERT INTO receitas 
+        (txt_breve_material, material, preco_plano, classe, categoria_incidencia1, cat1, incidencia_mes1,
+         categoria_incidencia2, cat2, incidencia_mes2, gluten, lactose, osso, fragmento, espinha, kcal, cho,
+         ptn, ptn_liq, gord_total, gord_sat, fibra, sodio, info_adicional)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, (
+            dados['txt_breve_material'], dados['material'], dados['preco_plano'], dados['classe'], 
+            dados['categoria_incidencia1'], dados['cat1'], dados['incidencia_mes1'], dados['categoria_incidencia2'], 
+            dados['cat2'], dados['incidencia_mes2'], dados['gluten'], dados['lactose'], dados['osso'], 
+            dados['fragmento'], dados['espinha'], dados['kcal'], dados['cho'], dados['ptn'], dados['ptn_liq'], 
+            dados['gord_total'], dados['gord_sat'], dados['fibra'], dados['sodio'], dados['info_adicional']
+        ))
+        conn.commit()
+    except Exception as e:
+        logger.error(f"Erro ao inserir receita: {e}")
+        raise
+    finally:
+        cursor.close()
+        conn.close()

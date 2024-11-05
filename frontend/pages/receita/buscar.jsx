@@ -168,7 +168,7 @@ const BuscarReceita = () => {
       color: "#ffffff",
       fontSize: "14px",
       outline: "none",
-      maxWidth: "800px", // Ajuste a largura máxima para alinhar com o restante dos campos
+      maxWidth: "800px",
     }}
   />
 </div>

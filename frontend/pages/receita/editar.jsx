@@ -7,6 +7,7 @@ const EditarReceita = () => {
   const router = useRouter();
   const [receitaId, setReceitaId] = useState("");
   const [receita, setReceita] = useState(null);
+  const [dadosOriginais, setDadosOriginais] = useState(null);
 
   const handleBackToMenu = () => {
     router.push("/home");
@@ -18,6 +19,7 @@ const EditarReceita = () => {
       if (!response.ok) {
         if (response.status === 404) {
           setReceita(null);
+          setDadosOriginais(null);
           alert("Receita não encontrada");
           return;
         }
@@ -26,6 +28,7 @@ const EditarReceita = () => {
       }
       const data = await response.json();
       setReceita(data);
+      setDadosOriginais(data);
     } catch (error) {
       console.error("Erro ao buscar receita:", error);
       alert("Erro ao buscar receita");
@@ -41,7 +44,7 @@ const EditarReceita = () => {
         },
         body: JSON.stringify({ id: receitaId, dados: receita }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Erro ao editar receita:", {
@@ -50,13 +53,16 @@ const EditarReceita = () => {
         });
         throw new Error("Erro ao editar receita");
       }
-  
+
       alert("Receita atualizada com sucesso!");
+      setDadosOriginais(receita);
     } catch (error) {
       console.error("Erro ao editar receita:", error);
       alert("Erro ao editar receita");
     }
   };
+
+  const hasChanges = JSON.stringify(receita) !== JSON.stringify(dadosOriginais);
 
   const handleChange = (field, value) => {
     setReceita((prev) => ({ ...prev, [field]: value }));
@@ -290,10 +296,10 @@ const EditarReceita = () => {
                 height: "49px",
                 width: "148px",
                 position: "relative",
-                cursor: "pointer",
+                cursor: hasChanges ? "pointer" : "not-allowed",
                 marginTop: "20px",
               }}
-              onClick={handleEditar}
+              onClick={hasChanges ? handleEditar : null}
             >
               <div
                 style={{
@@ -303,7 +309,6 @@ const EditarReceita = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  backgroundColor: "#ffffff80",
                   border: "3px solid #0064a6",
                 }}
               >

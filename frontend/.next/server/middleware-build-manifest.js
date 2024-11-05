@@ -30,15 +30,10 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/receita/buscar.js"
     ],
-    "/receita/editar": [
+    "/receita/excluir": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/receita/editar.js"
-    ],
-    "/receita/incluir": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/receita/incluir.js"
+      "static/chunks/pages/receita/excluir.js"
     ]
   },
   "ampFirstPages": []

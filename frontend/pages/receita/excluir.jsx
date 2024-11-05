@@ -1,21 +1,68 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { VscArrowCircleLeft } from "react-icons/vsc";
 import withAuth from "../../components/autenticacao";
 
 const ExcluirReceita = () => {
   const router = useRouter();
+  const [receitaId, setReceitaId] = useState("");
+  const [receita, setReceita] = useState(null);
 
   const handleBackToMenu = () => {
     router.push("/home");
   };
 
-  const handleBuscar = () => {
-    console.log("Buscar receita");
+  const handleBuscar = async () => {
+    try {
+      const response = await fetch(`/api/receitas/buscar?id=${receitaId}`);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          setReceita(null);
+          alert("Receita não encontrada");
+          return;
+        }
+        alert("Erro ao buscar receita");
+        return;
+      }
+
+      const data = await response.json();
+      setReceita(data);
+    } catch (error) {
+      console.error("Erro ao buscar receita:", error);
+      alert("Erro ao buscar receita");
+    }
   };
 
-  const handleExcluir = () => {
-    console.log("Excluir receita");
+  const handleExcluir = async () => {
+    if (!receitaId) {
+      alert("Por favor, insira um ID válido.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/receitas/excluir?id=${receitaId}`, {
+        method: "DELETE",
+      });
+
+      if (response.status === 404) {
+        setReceita(null);
+        alert("Receita não encontrada para exclusão");
+        return;
+      }
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message);
+        router.push("/home");
+      } else {
+        alert(data.message || "Erro ao excluir receita");
+      }
+    } catch (error) {
+      console.error("Erro ao excluir receita:", error);
+      alert("Erro ao excluir receita");
+    }
   };
 
   return (
@@ -67,6 +114,8 @@ const ExcluirReceita = () => {
         <label style={{ fontSize: "14px", marginBottom: "5px" }}>ID</label>
         <input
           type="text"
+          value={receitaId}
+          onChange={(e) => setReceitaId(e.target.value)}
           style={{
             backgroundColor: "rgba(0, 100, 166, 0.50)",
             border: "none",
@@ -85,11 +134,11 @@ const ExcluirReceita = () => {
             height: "49px",
             width: "148px",
             position: "relative",
-            cursor: "pointer",
+            cursor: receitaId ? "pointer" : "not-allowed",
             marginTop: "25px",
             marginBottom: "35px",
           }}
-          onClick={handleBuscar}
+          onClick={receitaId ? handleBuscar : null}
         >
           <div
             style={{
@@ -99,7 +148,6 @@ const ExcluirReceita = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "#ffffff80",
               border: "3px solid #0064a6",
             }}
           >
@@ -117,140 +165,213 @@ const ExcluirReceita = () => {
         </div>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: "15px 30px",
-          marginTop: "20px",
-          width: "100%",
-          maxWidth: "800px",
-        }}
-      >
-        {[
-          "Material",
-          "Preço Porção",
-          "Classe",
-          "Categoria Incidência 1",
-          "Categoria 1",
-          "Incidência 1",
-          "Categoria Incidência 2",
-          "Categoria 2",
-          "Incidência 2",
-          "Glúten",
-          "Lactose",
-          "Osso",
-          "Fragmento Osso",
-          "Espinha",
-          "CHO",
-          "PTN",
-          "PTN L",
-          "Gord T",
-          "Gord S",
-          "Fibra",
-          "Sódio",
-        ].map((label, index) => (
+      {receita && (
+        <>
           <div
-            key={index}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "15px 30px",
+              marginTop: "20px",
+              width: "100%",
+              maxWidth: "800px",
+            }}
+          >
+            <div style={{ gridColumn: "1 / -1", display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <label style={{ fontSize: "14px", marginBottom: "5px", textAlign: "center" }}>Descrição</label>
+              <input
+                type="text"
+                value={receita?.txt_breve_material || "-"}
+                readOnly
+                style={{
+                  backgroundColor: "rgba(0, 100, 166, 0.50)",
+                  border: "none",
+                  borderRadius: "20px",
+                  padding: "10px",
+                  width: "100%",
+                  textAlign: "center",
+                  color: "#ffffff",
+                  fontSize: "14px",
+                  outline: "none",
+                  maxWidth: "800px",
+                }}
+              />
+            </div>
+
+            {[
+              { label: "Material", value: receita?.material },
+              { label: "Preço Porção", value: `R$ ${receita?.preco_plano || "-"}` },
+              { label: "Classe", value: receita?.classe },
+              { label: "Categoria Incidência 1", value: receita?.categoria_incidencia1 },
+              { label: "Categoria 1", value: receita?.cat1 },
+              { label: "Incidência 1", value: receita?.incidencia_mes1 },
+              { label: "Categoria Incidência 2", value: receita?.categoria_incidencia2 || "-" },
+              { label: "Categoria 2", value: receita?.cat2 || "-" },
+              { label: "Incidência 2", value: receita?.incidencia_mes2 || "-" },
+              { label: "Glúten", value: receita?.gluten ? "Sim" : "Não" },
+              { label: "Lactose", value: receita?.lactose ? "Sim" : "Não" },
+              { label: "Osso", value: receita?.osso ? "Sim" : "Não" },
+              { label: "Fragmento Osso", value: receita?.fragmento ? "Sim" : "Não" },
+              { label: "Espinha", value: receita?.espinha ? "Sim" : "Não" },
+              { label: "Calorias", value: receita?.kcal },
+              { label: "CHO", value: receita?.cho },
+              { label: "PTN", value: receita?.ptn },
+              { label: "PTN Líquido", value: receita?.ptn_liq },
+              { label: "Gordura Total", value: receita?.gord_total },
+              { label: "Gordura Saturada", value: receita?.gord_sat },
+              { label: "Quantidade (g)", value: receita?.qtd_g },
+            ].map((field, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <label style={{ fontSize: "14px", marginBottom: "5px" }}>{field.label}</label>
+                <input
+                  type="text"
+                  value={field.value || "-"}
+                  readOnly
+                  style={{
+                    backgroundColor: "rgba(0, 100, 166, 0.50)",
+                    border: "none",
+                    borderRadius: "20px",
+                    padding: "10px",
+                    width: "100%",
+                    maxWidth: "250px",
+                    textAlign: "center",
+                    color: "#ffffff",
+                    fontSize: "14px",
+                    outline: "none",
+                  }}
+                />
+              </div>
+            ))}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "30px",
+                gridColumn: "1 / -1",
+              }}
+            >
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <label style={{ fontSize: "14px", marginBottom: "5px" }}>Fibra</label>
+                <input
+                  type="text"
+                  value={receita?.fibra || "-"}
+                  readOnly
+                  style={{
+                    backgroundColor: "rgba(0, 100, 166, 0.50)",
+                    border: "none",
+                    borderRadius: "20px",
+                    padding: "10px",
+                    maxWidth: "250px",
+                    textAlign: "center",
+                    color: "#ffffff",
+                    fontSize: "14px",
+                    outline: "none",
+                  }}
+                />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <label style={{ fontSize: "14px", marginBottom: "5px" }}>Sódio</label>
+                <input
+                  type="text"
+                  value={receita?.sodio || "-"}
+                  readOnly
+                  style={{
+                    backgroundColor: "rgba(0, 100, 166, 0.50)",
+                    border: "none",
+                    borderRadius: "20px",
+                    padding: "10px",
+                    maxWidth: "250px",
+                    textAlign: "center",
+                    color: "#ffffff",
+                    fontSize: "14px",
+                    outline: "none",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div
             style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              marginTop: "20px",
               width: "100%",
+              maxWidth: "800px",
             }}
           >
-            <label style={{ fontSize: "14px", marginBottom: "5px" }}>{label}</label>
-            <input
-              type="text"
+            <label style={{ fontSize: "14px", marginBottom: "5px" }}>Informações Adicionais</label>
+            <textarea
+              value={receita?.info_adicional || "-"}
+              readOnly
               style={{
                 backgroundColor: "rgba(0, 100, 166, 0.50)",
                 border: "none",
                 borderRadius: "20px",
                 padding: "10px",
                 width: "100%",
-                maxWidth: "250px",
-                textAlign: "center",
+                height: "50px",
                 color: "#ffffff",
                 fontSize: "14px",
+                fontFamily: "var(--font-family-ui)",
+                resize: "none",
                 outline: "none",
               }}
             />
           </div>
-        ))}
-      </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: "20px",
-          width: "100%",
-          maxWidth: "800px",
-        }}
-      >
-        <label style={{ fontSize: "14px", marginBottom: "5px" }}>Informações Adicionais</label>
-        <textarea
-          style={{
-            backgroundColor: "rgba(0, 100, 166, 0.50)",
-            border: "none",
-            borderRadius: "20px",
-            padding: "10px",
-            width: "100%",
-            height: "100px",
-            color: "#ffffff",
-            fontSize: "14px",
-            fontFamily: "var(--font-family-ui)",
-            resize: "none",
-            outline: "none",
-          }}
-        />
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "20px",
-        }}
-      >
-        <div
-          style={{
-            height: "49px",
-            width: "148px",
-            position: "relative",
-            cursor: "pointer",
-            marginTop: "20px",
-          }}
-          onClick={handleExcluir}
-        >
           <div
             style={{
-              height: "49px",
-              width: "146px",
-              borderRadius: "20px",
               display: "flex",
               justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#ffffff80",
-              border: "3px solid #0064a6",
+              marginTop: "20px",
             }}
           >
-            <span
+            <div
               style={{
-                color: "#0064a6",
-                fontFamily: "Inter-Regular, Helvetica",
-                fontSize: "16px",
-                fontWeight: "400",
+                height: "49px",
+                width: "148px",
+                position: "relative",
+                cursor: "pointer",
+                marginTop: "20px",
               }}
+              onClick={handleExcluir}
             >
-              excluir
-            </span>
+              <div
+                style={{
+                  height: "49px",
+                  width: "146px",
+                  borderRadius: "20px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#ffffff80",
+                  border: "3px solid #0064a6",
+                }}
+              >
+                <span
+                  style={{
+                    color: "#0064a6",
+                    fontFamily: "Inter-Regular, Helvetica",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                  }}
+                >
+                  excluir
+                </span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div style={{ height: "30px" }}></div>
+        </>
+      )}
     </div>
   );
 };

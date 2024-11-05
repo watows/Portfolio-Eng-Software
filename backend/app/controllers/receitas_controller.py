@@ -1,12 +1,12 @@
 from flask import Blueprint, request, jsonify
-from app.services.receitas_service import buscar_receita_por_id, atualizar_receita, inserir_receita
+from app.services.receitas_service import buscar_receita_por_id, atualizar_receita, inserir_receita, excluir_receita_por_id
 import logging
 
 logger = logging.getLogger(__name__)
 
 recipe_blueprint = Blueprint('recipe', __name__)
 
-@recipe_blueprint.route('/buscar_receita', methods=['GET'])
+@recipe_blueprint.route('/buscar_receita', methods=['GET'], endpoint='buscar_receita')
 def buscar_receita():
     receita_id = request.args.get('id')
     
@@ -24,7 +24,7 @@ def buscar_receita():
 
     return jsonify(receita_data), 200
 
-@recipe_blueprint.route('/editar_receita', methods=['PUT'])
+@recipe_blueprint.route('/editar_receita', methods=['PUT'], endpoint='editar_receita')
 def editar_receita():
     receita_id = request.json.get('id')
     novos_dados = request.json.get('dados')
@@ -39,7 +39,7 @@ def editar_receita():
     else:
         return jsonify({"message": mensagem}), 400
 
-@recipe_blueprint.route('/incluir_receita', methods=['POST'])
+@recipe_blueprint.route('/incluir_receita', methods=['POST'], endpoint='incluir_receita')
 def incluir_receita():
     dados = request.json
     try:
@@ -47,3 +47,20 @@ def incluir_receita():
         return jsonify({"message": "Receita incluída com sucesso"}), 201
     except Exception as e:
         return jsonify({"message": str(e)}), 500
+
+@recipe_blueprint.route('/excluir_receita', methods=['DELETE'], endpoint='excluir_receita')
+def excluir_receita():
+    receita_id = request.args.get('id')
+    
+    try:
+        receita_id = int(receita_id)
+    except ValueError:
+        logger.error("ID inválido fornecido para exclusão.")
+        return jsonify({"message": "ID inválido"}), 400
+
+    sucesso, mensagem = excluir_receita_por_id(receita_id)
+
+    if sucesso:
+        return jsonify({"message": mensagem}), 200
+    else:
+        return jsonify({"message": mensagem}), 404

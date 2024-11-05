@@ -73,7 +73,6 @@ def update_user_data(user_id, nome, email, senha=None):
     cursor = conn.cursor()
 
     try:
-        # Verifica se houve alteração
         cursor.execute("SELECT nome, email FROM usuarios WHERE id = %s", (user_id,))
         current_user = cursor.fetchone()
         
@@ -83,7 +82,6 @@ def update_user_data(user_id, nome, email, senha=None):
         if current_user[0] == nome and current_user[1] == email and not senha:
             return False, "Dados não tiveram alteração"
 
-        # Atualiza os campos
         if senha:
             senha_hash = bcrypt.generate_password_hash(senha).decode('utf-8')
             cursor.execute("UPDATE usuarios SET nome = %s, email = %s, senha = %s WHERE id = %s",

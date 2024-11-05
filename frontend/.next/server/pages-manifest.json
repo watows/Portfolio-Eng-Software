@@ -2,9 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/receita/editar": "pages/receita/editar.js",
   "/home": "pages/home.js",
   "/receita/buscar": "pages/receita/buscar.js",
-  "/receita/incluir": "pages/receita/incluir.js",
-  "/api/receitas/buscar": "pages/api/receitas/buscar.js"
+  "/api/receitas/buscar": "pages/api/receitas/buscar.js",
+  "/receita/excluir": "pages/receita/excluir.js",
+  "/api/receitas/excluir": "pages/api/receitas/excluir.js"
 }
