@@ -2,9 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/home": "pages/home.js",
-  "/receita/buscar": "pages/receita/buscar.js",
-  "/api/receitas/buscar": "pages/api/receitas/buscar.js",
-  "/receita/excluir": "pages/receita/excluir.js",
-  "/api/receitas/excluir": "pages/api/receitas/excluir.js"
+  "/relatorio/nutricional": "pages/relatorio/nutricional.js",
+  "/relatorio/custo": "pages/relatorio/custo.js",
+  "/home": "pages/home.js"
 }

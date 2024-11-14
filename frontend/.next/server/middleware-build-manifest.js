@@ -25,15 +25,15 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/home.js"
     ],
-    "/receita/buscar": [
+    "/relatorio/custo": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/receita/buscar.js"
+      "static/chunks/pages/relatorio/custo.js"
     ],
-    "/receita/excluir": [
+    "/relatorio/nutricional": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/receita/excluir.js"
+      "static/chunks/pages/relatorio/nutricional.js"
     ]
   },
   "ampFirstPages": []

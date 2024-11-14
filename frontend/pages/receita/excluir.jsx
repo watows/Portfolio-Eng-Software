@@ -15,7 +15,7 @@ const ExcluirReceita = () => {
   const handleBuscar = async () => {
     try {
       const response = await fetch(`/api/receitas/buscar?id=${receitaId}`);
-      
+
       if (!response.ok) {
         if (response.status === 404) {
           setReceita(null);

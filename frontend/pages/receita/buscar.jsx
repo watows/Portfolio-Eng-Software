@@ -16,7 +16,7 @@ const BuscarReceita = () => {
   const handleBuscar = async () => {
     try {
       const response = await fetch(`/api/receitas/buscar?id=${receitaId}`);
-      
+
       if (!response.ok) {
         if (response.status === 404) {
           setReceita(null);
@@ -26,7 +26,7 @@ const BuscarReceita = () => {
         alert("Erro ao buscar receita");
         return;
       }
-  
+
       const data = await response.json();
       setReceita(data);
     } catch (error) {
@@ -34,7 +34,7 @@ const BuscarReceita = () => {
       alert("Erro ao buscar receita");
     }
   };
-  
+
 
   return (
     <div
@@ -153,25 +153,25 @@ const BuscarReceita = () => {
             }}
           >
             <div style={{ gridColumn: "1 / -1", display: "flex", flexDirection: "column", alignItems: "center" }}>
-  <label style={{ fontSize: "14px", marginBottom: "5px", textAlign: "center" }}>Descrição</label>
-  <input
-    type="text"
-    value={receita?.txt_breve_material || ""}
-    onChange={(e) => handleChange("txt_breve_material", e.target.value)}
-    style={{
-      backgroundColor: "rgba(0, 100, 166, 0.50)",
-      border: "none",
-      borderRadius: "20px",
-      padding: "10px",
-      width: "100%",
-      textAlign: "center",
-      color: "#ffffff",
-      fontSize: "14px",
-      outline: "none",
-      maxWidth: "800px",
-    }}
-  />
-</div>
+              <label style={{ fontSize: "14px", marginBottom: "5px", textAlign: "center" }}>Descrição</label>
+              <input
+                type="text"
+                value={receita?.txt_breve_material || ""}
+                onChange={(e) => handleChange("txt_breve_material", e.target.value)}
+                style={{
+                  backgroundColor: "rgba(0, 100, 166, 0.50)",
+                  border: "none",
+                  borderRadius: "20px",
+                  padding: "10px",
+                  width: "100%",
+                  textAlign: "center",
+                  color: "#ffffff",
+                  fontSize: "14px",
+                  outline: "none",
+                  maxWidth: "800px",
+                }}
+              />
+            </div>
 
             {[
               { label: "Material", value: receita?.material },

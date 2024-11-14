@@ -344,7 +344,7 @@ const App = () => {
       }}
     >
       <div style={{ position: "fixed", top: "20px", left: "20px", cursor: "pointer" }} onClick={() => router.back()}>
-        <VscArrowCircleLeft size={40} color="rgba(0, 100, 166, 0.5)" />
+        <VscArrowCircleLeft size={50} color="rgba(0, 100, 166, 0.5)" />
       </div>
       <h1 style={{ textAlign: "center", marginBottom: "40px", width: "100%" }}>Configurações</h1>
       <h2 style={{ textAlign: "center", marginBottom: "20px", width: "100%" }}>Dados do Usuário</h2>

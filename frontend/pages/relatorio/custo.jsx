@@ -7,15 +7,19 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
-import withAuth from "../../components/autenticacao"; // Importa o HOC com o nome correto
+import withAuth from "../../components/autenticacao";
+import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const RelatorioCusto = () => {
   const router = useRouter();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [mediaGeral, setMediaGeral] = useState(null);
+  const [custosDiarios, setCustosDiarios] = useState([]);
+  const [isExportEnabled, setIsExportEnabled] = useState(false);
   const datePickerRef = useRef(null);
 
   const handleBackToMenu = () => {
@@ -28,19 +32,77 @@ const RelatorioCusto = () => {
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    consultarCusto(date);
   };
 
-  useEffect(() => {
-    const media = data.datasets[0].data.reduce((acc, curr) => acc + curr, 0) / data.labels.length;
-    setMediaGeral(media.toFixed(2));
-  }, []);
+  const consultarCusto = async (date) => {
+    try {
+      const response = await fetch("/api/relatorios/custo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          month: date.getMonth() + 1,
+          year: date.getFullYear(),
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.custosDiarios.length > 0) {
+        setCustosDiarios(data.custosDiarios);
+        setMediaGeral(data.mediaMensal.toFixed(2));
+        setIsExportEnabled(true);
+      } else {
+        alert("Nenhum cardápio encontrado para o mês/ano selecionado.");
+        setCustosDiarios([]);
+        setMediaGeral(null);
+        setIsExportEnabled(false);
+      }
+    } catch (error) {
+      console.error("Erro inesperado ao consultar custo:", error);
+      alert("Erro ao consultar o custo. Tente novamente.");
+      setIsExportEnabled(false);
+    }
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    doc.text("Relatório de Custo Diário", 10, 10);
+
+    custosDiarios.forEach((custo, index) => {
+      const y = 20 + index * 10;
+      doc.text(`Dia ${index + 1}: R$ ${parseFloat(custo.custo).toFixed(2)}`, 10, y);
+    });
+
+    doc.text(`Média Geral do Mês: R$ ${mediaGeral}`, 10, 30 + custosDiarios.length * 10);
+
+    doc.save("relatorio_custo.pdf");
+  };
+
+  const exportToExcel = () => {
+    const worksheetData = custosDiarios.map((custo) => ({
+      Dia: custo.date,
+      Custo: parseFloat(custo.custo).toFixed(2),
+    }));
+
+    worksheetData.push({
+      Dia: "Média Geral do Mês",
+      Custo: mediaGeral,
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Relatório de Custo");
+
+    XLSX.writeFile(workbook, "relatorio_custo.xlsx");
+  };
 
   const data = {
-    labels: Array.from({ length: 31 }, (_, i) => `Dia ${i + 1}`),
+    labels: custosDiarios.map((custo) => custo.date),
     datasets: [
       {
         label: "Custo (R$)",
-        data: Array.from({ length: 31 }, () => Math.floor(Math.random() * 100) + 50),
+        data: custosDiarios.map((custo) => parseFloat(custo.custo)),
         backgroundColor: "rgba(0, 100, 166, 0.5)",
       },
     ],
@@ -146,10 +208,10 @@ const RelatorioCusto = () => {
             height: "49px",
             width: "148px",
             position: "relative",
-            cursor: "pointer",
+            cursor: isExportEnabled ? "pointer" : "not-allowed",
             marginTop: "20px",
           }}
-          onClick={() => console.log("Exportar PDF")}
+          onClick={isExportEnabled ? exportToPDF : null}
         >
           <div
             style={{
@@ -159,7 +221,6 @@ const RelatorioCusto = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "#ffffff80",
               border: "3px solid #0064a6",
             }}
           >
@@ -181,10 +242,10 @@ const RelatorioCusto = () => {
             height: "49px",
             width: "148px",
             position: "relative",
-            cursor: "pointer",
+            cursor: isExportEnabled ? "pointer" : "not-allowed",
             marginTop: "20px",
           }}
-          onClick={() => console.log("Exportar Excel")}
+          onClick={isExportEnabled ? exportToExcel : null}
         >
           <div
             style={{
@@ -194,7 +255,6 @@ const RelatorioCusto = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "#ffffff80",
               border: "3px solid #0064a6",
             }}
           >
@@ -211,8 +271,6 @@ const RelatorioCusto = () => {
           </div>
         </div>
       </div>
-
-      <div style={{ height: "30px" }}></div>
     </div>
   );
 };

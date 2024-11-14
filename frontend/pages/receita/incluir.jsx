@@ -62,7 +62,7 @@ const IncluirReceita = () => {
       fragmento: receita.fragmento === true ? true : receita.fragmento === false ? false : null,
       espinha: receita.espinha === true ? true : receita.espinha === false ? false : null,
     };
-  
+
     try {
       const response = await fetch(`/api/receitas/incluir`, {
         method: "POST",
@@ -71,12 +71,12 @@ const IncluirReceita = () => {
         },
         body: JSON.stringify(receitaTratada),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Erro ao incluir receita");
       }
-  
+
       alert("Receita incluída com sucesso!");
       router.push("/home");
     } catch (error) {
@@ -84,7 +84,7 @@ const IncluirReceita = () => {
       alert("Erro ao incluir receita");
     }
   };
-  
+
   return (
     <div
       style={{

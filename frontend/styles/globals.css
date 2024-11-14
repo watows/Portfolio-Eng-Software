@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
 :root {
-    --font-family-ui: 'Inter', sans-serif;
-    --sds-typography-body-font-family: var(--font-family-ui);
-    --sds-typography-body-size-medium: 16px;
-    --sds-typography-body-font-weight-strong: 700;
-  }
-  
-  body {
-    font-family: var(--font-family-ui);
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-y: auto !important;
-  }
+  --font-family-ui: 'Inter', sans-serif;
+  --sds-typography-body-font-family: var(--font-family-ui);
+  --sds-typography-body-size-medium: 16px;
+  --sds-typography-body-font-weight-strong: 700;
+}
+
+body {
+  font-family: var(--font-family-ui);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto !important;
+}

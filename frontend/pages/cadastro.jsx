@@ -30,86 +30,86 @@ const Image = () => {
 };
 
 const NameBox = ({ setName }) => {
-    const handleChange = (e) => {
-      setName(e.target.value);
-      console.log("Nome:", e.target.value);
-    };
-  
-    return (
+  const handleChange = (e) => {
+    setName(e.target.value);
+    console.log("Nome:", e.target.value);
+  };
+
+  return (
+    <div
+      className="box"
+      style={{
+        height: "49px",
+        width: "328px",
+        marginTop: "70px",
+        marginBottom: "10px",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
       <div
-        className="box"
+        className="input-name"
         style={{
           height: "49px",
-          width: "328px",
-          marginTop: "70px",
-          marginBottom: "10px",
-          display: "flex",
-          justifyContent: "center",
+          width: "330px",
+          position: "relative",
         }}
       >
         <div
-          className="input-name"
+          className="overlap-group"
           style={{
             height: "49px",
-            width: "330px",
+            width: "328px",
             position: "relative",
           }}
         >
           <div
-            className="overlap-group"
+            className="rectangle"
             style={{
-              height: "49px",
-              width: "328px",
-              position: "relative",
+              backgroundColor: "#0064a680",
+              border: "3px solid #ffffff",
+              borderRadius: "20px",
+              height: "42px",
+              width: "326px",
+              position: "absolute",
+              top: "0",
+              left: "0",
             }}
-          >
-            <div
-              className="rectangle"
-              style={{
-                backgroundColor: "#0064a680",
-                border: "3px solid #ffffff",
-                borderRadius: "20px",
-                height: "42px",
-                width: "326px",
-                position: "absolute",
-                top: "0",
-                left: "0",
-              }}
-            />
-            <FaUser
-              className="user-icon"
-              style={{
-                height: "20px",
-                width: "20px",
-                color: "#ffffff",
-                position: "absolute",
-                top: "14px",
-                left: "21px",
-              }}
-            />
-            <input
-              type="text"
-              placeholder="nome"
-              onChange={handleChange}
-              style={{
-                color: "#ffffff",
-                fontFamily: "Inter-Regular, Helvetica",
-                fontSize: "16px",
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                width: "276px",
-                position: "absolute",
-                top: "50%",
-                left: "52px",
-                transform: "translateY(-50%)",
-              }}
-            />
-          </div>
+          />
+          <FaUser
+            className="user-icon"
+            style={{
+              height: "20px",
+              width: "20px",
+              color: "#ffffff",
+              position: "absolute",
+              top: "14px",
+              left: "21px",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="nome"
+            onChange={handleChange}
+            style={{
+              color: "#ffffff",
+              fontFamily: "Inter-Regular, Helvetica",
+              fontSize: "16px",
+              background: "transparent",
+              border: "none",
+              outline: "none",
+              width: "276px",
+              position: "absolute",
+              top: "50%",
+              left: "52px",
+              transform: "translateY(-50%)",
+            }}
+          />
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
 const EmailBox = ({ setEmail }) => {
   const handleChange = (e) => {
@@ -273,7 +273,7 @@ const PasswordBox = ({ setPassword }) => {
   );
 };
 
-const RegisterButton = ({ handleRegister, name,  email, password }) => {
+const RegisterButton = ({ handleRegister, name, email, password }) => {
   const isDisabled = !name || !email || !password;
 
   return (
@@ -342,43 +342,43 @@ const RegisterButton = ({ handleRegister, name,  email, password }) => {
 };
 
 const App = () => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const router = useRouter();
-  
-    const handleRegister = async () => {
-        if (!name || !email || !password) {
-          alert("Por favor, preencha todos os campos.");
-          return;
-        }
-        
-        try {
-          const response = await fetch("http://localhost:5000/auth/register", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ nome: name, email, senha: password }),
-          });
-          
-          const data = await response.json();
-          
-          if (response.ok) {
-            alert(data.message);
-            router.push("/login");
-          } else {
-            alert(data.message);
-          }
-        } catch (error) {
-          console.error("Erro ao registrar:", error);
-          alert("Ocorreu um erro ao registrar. Tente novamente.");
-        }
-      };      
-  
-      useEffect(() => {
-        const style = document.createElement("style");
-        style.innerHTML = `
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleRegister = async () => {
+    if (!name || !email || !password) {
+      alert("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nome: name, email, senha: password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message);
+        router.push("/login");
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Erro ao registrar:", error);
+      alert("Ocorreu um erro ao registrar. Tente novamente.");
+    }
+  };
+
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = `
           body {
             margin: 0;
             overflow-y: hidden;
@@ -388,27 +388,27 @@ const App = () => {
             opacity: 1;
           }
         `;
-        document.head.appendChild(style);
-      }, []);      
-  
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh",
-          overflow: "hidden",
-        }}
-      >
-        <Image />
-        <NameBox setName={setName} />
-        <EmailBox setEmail={setEmail} />
-        <PasswordBox setPassword={setPassword} />
-        <RegisterButton handleRegister={handleRegister} name={name} email={email} password={password} />
-      </div>
-    );
-  };
-  
-  export default App;
+    document.head.appendChild(style);
+  }, []);
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
+      <Image />
+      <NameBox setName={setName} />
+      <EmailBox setEmail={setEmail} />
+      <PasswordBox setPassword={setPassword} />
+      <RegisterButton handleRegister={handleRegister} name={name} email={email} password={password} />
+    </div>
+  );
+};
+
+export default App;

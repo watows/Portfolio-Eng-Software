@@ -260,7 +260,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-  
+
     try {
       const response = await fetch('http://localhost:5000/auth/login', {
         method: 'POST',
@@ -269,16 +269,16 @@ const App = () => {
         },
         body: JSON.stringify({ email, senha: password }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Login falhou! Verifique seu e-mail e senha.');
       }
-  
+
       const data = await response.json();
       const token = data.token;
-  
+
       localStorage.setItem("authToken", token);
-  
+
       router.push("/home");
     } catch (error) {
       console.error(error);
