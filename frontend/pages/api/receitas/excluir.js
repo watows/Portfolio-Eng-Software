@@ -7,7 +7,7 @@ export default async function handler(req, res) {
         const { id } = req.query;
 
         try {
-            const response = await fetch(`http://localhost:5000/recipe/excluir_receita?id=${id}`, {
+            const response = await fetch(`http://127.0.0.1:5000/recipe/excluir_receita?id=${id}`, {
                 method: 'DELETE',
                 headers: {
                     "Content-Type": "application/json"

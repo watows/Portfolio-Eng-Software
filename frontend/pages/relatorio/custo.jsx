@@ -1,5 +1,4 @@
-// pages/relatorio/custo.jsx
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { VscArrowCircleLeft } from "react-icons/vsc";
 import { AiOutlineCalendar } from "react-icons/ai";
@@ -101,7 +100,7 @@ const RelatorioCusto = () => {
     labels: custosDiarios.map((custo) => custo.date),
     datasets: [
       {
-        label: "Custo (R$)",
+        label: "Custo",
         data: custosDiarios.map((custo) => parseFloat(custo.custo)),
         backgroundColor: "rgba(0, 100, 166, 0.5)",
       },
@@ -112,7 +111,7 @@ const RelatorioCusto = () => {
     responsive: true,
     plugins: {
       legend: { position: "top" },
-      title: { display: true, text: "Média de Custo por Dia" },
+      title: { display: false },
     },
     scales: {
       y: { beginAtZero: true, title: { display: true, text: "Custo (R$)" }, grid: { display: false } },

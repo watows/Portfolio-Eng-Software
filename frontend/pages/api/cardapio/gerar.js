@@ -3,9 +3,9 @@ import corsMiddleware from "../../../utils/corsMiddleware";
 export default async function handler(req, res) {
     await corsMiddleware(req, res);
 
-    if (req.method === 'POST' && req.url.includes("gerar")) { // Para a rota de geração
+    if (req.method === 'POST' && req.url.includes("gerar")) {
         try {
-            const response = await fetch("http://localhost:5000/menu/gerar_cardapio", {
+            const response = await fetch("http://127.0.0.1:5000/menu/gerar_cardapio", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(req.body),
@@ -29,9 +29,9 @@ export default async function handler(req, res) {
                 detalhes: error.message
             });
         }
-    } else if (req.method === 'POST' && req.url.includes("salvar")) { // Para a rota de salvamento
+    } else if (req.method === 'POST' && req.url.includes("salvar")) {
         try {
-            const response = await fetch("http://localhost:5000/menu/salvar_cardapio", {
+            const response = await fetch("http://127.0.0.1:5000/menu/salvar_cardapio", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(req.body),

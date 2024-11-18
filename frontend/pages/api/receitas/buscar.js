@@ -7,7 +7,7 @@ export default async function handler(req, res) {
         const { id } = req.query;
 
         try {
-            const response = await fetch(`http://localhost:5000/recipe/buscar_receita?id=${id}`);
+            const response = await fetch(`http://127.0.0.1:5000/recipe/buscar_receita?id=${id}`);
             if (!response.ok) {
                 if (response.status === 404) {
                     return res.status(404).json({ message: "Receita não encontrada" });

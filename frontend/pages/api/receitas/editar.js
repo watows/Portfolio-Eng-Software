@@ -7,7 +7,7 @@ export default async function handler(req, res) {
         const { id, dados } = req.body;
 
         try {
-            const response = await fetch(`http://localhost:5000/recipe/editar_receita`, {
+            const response = await fetch(`http://127.0.0.1:5000/recipe/editar_receita`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

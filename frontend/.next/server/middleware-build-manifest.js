@@ -20,20 +20,45 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
+    "/cardapio/gerar": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/cardapio/gerar.js"
+    ],
+    "/cardapio/visualizar": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/cardapio/visualizar.js"
+    ],
+    "/configuracoes": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/configuracoes.js"
+    ],
     "/home": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/home.js"
     ],
-    "/relatorio/custo": [
+    "/receita/buscar": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/relatorio/custo.js"
+      "static/chunks/pages/receita/buscar.js"
     ],
-    "/relatorio/nutricional": [
+    "/receita/editar": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/relatorio/nutricional.js"
+      "static/chunks/pages/receita/editar.js"
+    ],
+    "/receita/excluir": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/receita/excluir.js"
+    ],
+    "/receita/incluir": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/receita/incluir.js"
     ]
   },
   "ampFirstPages": []
