@@ -130,7 +130,7 @@ const BuscarReceita = () => {
                 fontWeight: "400",
               }}
             >
-              buscar
+              Buscar
             </span>
           </div>
         </div>

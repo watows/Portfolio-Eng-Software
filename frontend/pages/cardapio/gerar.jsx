@@ -72,7 +72,7 @@ const GerarCardapio = () => {
       const response = await fetch("/api/cardapio/gerar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date: formattedDate, qtd_g: 150, kcal: 300 }),
+        body: JSON.stringify({ action: "gerar", date: formattedDate, qtd_g: 150, kcal: 300 }),
       });
 
       if (!response.ok) {
@@ -104,35 +104,68 @@ const GerarCardapio = () => {
     handleGerarCardapio();
   };
 
+  const verificarCardapio = async () => {
+    const response = await fetch("/api/cardapio/gerar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "verificar",
+        month: selectedDate.getMonth() + 1,
+        year: selectedDate.getFullYear(),
+      }),
+    });
+    return response;
+  };
+
   const handleGravar = async () => {
-    if (!isCardapioGenerated) return;
+    if (!isCardapioGenerated) {
+        alert("Por favor, gere o cardápio antes de tentar salvar.");
+        return;
+    }
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/menu/salvar_cardapio", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          month: selectedDate.getMonth() + 1,
-          year: selectedDate.getFullYear(),
-          cardapio,
-        }),
-      });
+        const verificarResponse = await verificarCardapio();
+        if (verificarResponse.status === 404) {
+            console.log("Nenhum cardápio registrado. Continuando para salvar...");
+        } else if (!verificarResponse.ok) {
+            const errorData = await verificarResponse.json();
+            console.error("Erro ao verificar cardápio existente:", errorData);
+            alert(`Erro ao verificar cardápio: ${errorData.message}`);
+            return;
+        } else {
+            const verificarData = await verificarResponse.json();
+            if (verificarData.exists) {
+                alert("Já existe um cardápio registrado para este mês/ano.");
+                return;
+            }
+        }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Erro ao salvar cardápio:", errorData);
-        alert(`Erro ao salvar cardápio: ${errorData.message || JSON.stringify(errorData)}`);
-        return;
-      }
+        const salvarResponse = await fetch("/api/cardapio/gerar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                action: "salvar",
+                month: selectedDate.getMonth() + 1,
+                year: selectedDate.getFullYear(),
+                cardapio,
+            }),
+        });
 
-      const data = await response.json();
-      console.log("Cardápio salvo com sucesso:", data);
-      alert("Cardápio salvo com sucesso!");
+        if (!salvarResponse.ok) {
+            const errorData = await salvarResponse.json();
+            console.error("Erro ao salvar cardápio:", errorData);
+            alert(`Erro ao salvar cardápio: ${errorData.message}`);
+            return;
+        }
+
+        const salvarData = await salvarResponse.json();
+        console.log("Cardápio salvo com sucesso:", salvarData);
+        alert("Cardápio salvo com sucesso!");
     } catch (error) {
-      console.error("Erro inesperado ao salvar cardápio:", error);
-      alert("Erro inesperado ao salvar cardápio. Verifique o console para mais detalhes.");
+        console.error("Erro inesperado ao salvar cardápio:", error);
+        alert("Erro inesperado ao salvar cardápio. Verifique o console para mais detalhes.");
     }
-  };
+};
 
   return (
     <div

@@ -2,9 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/cardapio/visualizar": "pages/cardapio/visualizar.js",
   "/home": "pages/home.js",
-  "/api/receitas/editar": "pages/api/receitas/editar.js",
-  "/receita/editar": "pages/receita/editar.js",
-  "/receita/incluir": "pages/receita/incluir.js",
-  "/api/receitas/buscar": "pages/api/receitas/buscar.js"
+  "/cardapio/gerar": "pages/cardapio/gerar.js",
+  "/api/cardapio/gerar": "pages/api/cardapio/gerar.js"
 }

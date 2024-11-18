@@ -22,6 +22,30 @@ def gerar_cardapio():
         logger.error(f"Erro ao gerar cardápio personalizado: {e}")
         return jsonify({"message": "Erro ao gerar cardápio personalizado", "detalhes": str(e)}), 400
 
+@cardapio_blueprint.route('/verificar_cardapio', methods=['POST'])
+def verificar_cardapio():
+    try:
+        data = request.json
+        month = data.get("month")
+        year = data.get("year")
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT COUNT(*) FROM cardapios
+            WHERE month = %s AND year = %s
+        """, (month, year))
+        resultado = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        exists = resultado[0] > 0
+        return jsonify({"exists": exists}), 200
+    except Exception as e:
+        logger.error(f"Erro ao verificar cardápio existente: {e}")
+        return jsonify({"message": "Erro ao verificar cardápio existente", "detalhes": str(e)}), 500
+
 @cardapio_blueprint.route('/salvar_cardapio', methods=['POST'])
 def salvar_cardapio():
     try:
@@ -75,17 +99,15 @@ def consultar_cardapio():
         if not cardapio:
             return jsonify({"message": "Nenhum cardápio encontrado para o mês/ano selecionado"}), 404
 
-        # Formata os dados para agrupar por data
         cardapio_formatado = []
         for row in cardapio:
-            dia = row[0].strftime("%Y-%m-%d")  # Converte a data para string no formato desejado
+            dia = row[0].strftime("%Y-%m-%d")
             item = {
                 "name": row[1],
                 "quantity": row[2],
                 "kcal": row[3],
                 "tags": row[4]
             }
-            # Procura se o dia já está na lista, e adiciona itens no mesmo dia
             dia_existente = next((d for d in cardapio_formatado if d['date'] == dia), None)
             if dia_existente:
                 dia_existente["items"].append(item)
@@ -113,7 +135,6 @@ def custo_cardapio():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # Consulta ajustada com TRIM para evitar problemas de correspondência devido a espaços em branco
         logger.info(f"Consultando custos diários para o mês: {mes}, ano: {ano}")
         
         cursor.execute("""
@@ -131,8 +152,7 @@ def custo_cardapio():
         cursor.close()
         conn.close()
         
-        # Calcula a média mensal
-        custo_total = sum([float(custo[1]) for custo in custos_diarios])  # Convertendo para float
+        custo_total = sum([float(custo[1]) for custo in custos_diarios])
         media_mensal = custo_total / len(custos_diarios) if custos_diarios else 0
         logger.info(f"Custo total: {custo_total}, Média mensal: {media_mensal}")
         
@@ -154,7 +174,6 @@ def nutricional_cardapio():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Consulta para obter os valores nutricionais das receitas para cada dia
         cursor.execute("""
             SELECT c.date,
                    SUM(r.kcal) AS total_kcal,
@@ -176,7 +195,6 @@ def nutricional_cardapio():
         if not nutricional_diario:
             return jsonify({"message": "Nenhum cardápio encontrado para o mês/ano selecionado"}), 404
 
-        # Preparando dados para o frontend
         dados_nutricionais = []
         total_kcal, total_cho, total_ptn, total_fibra, total_sodio = 0, 0, 0, 0, 0
 
@@ -191,12 +209,11 @@ def nutricional_cardapio():
                 "sodio": float(sodio) if sodio is not None else 0,
             })
 
-            # Soma para calcular a média mensal
             total_kcal += kcal if kcal is not None else 0
             total_cho += cho if cho is not None else 0
             total_ptn += ptn if ptn is not None else 0
             total_fibra += fibra if fibra is not None else 0
-            total_sodio += sodio if sodio is not None else 0  # Corrige aqui se necessário
+            total_sodio += sodio if sodio is not None else 0
 
         dias_totais = len(nutricional_diario)
         media_mensal = {
@@ -204,10 +221,9 @@ def nutricional_cardapio():
             "cho": round(total_cho / dias_totais, 2) if dias_totais > 0 else 0,
             "ptn": round(total_ptn / dias_totais, 2) if dias_totais > 0 else 0,
             "fibra": round(total_fibra / dias_totais, 2) if dias_totais > 0 else 0,
-            "sodio": round(total_sodio / dias_totais, 2) if dias_totais > 0 else 0  # Certifique-se de que `sodio` está correto
+            "sodio": round(total_sodio / dias_totais, 2) if dias_totais > 0 else 0
         }
 
-        # Log de depuração para verificar valores calculados
         print("Valores diários de sódio:", [d["sodio"] for d in dados_nutricionais])
         print("Total de sódio:", total_sodio)
         print("Média mensal de sódio calculada:", media_mensal["sodio"])
