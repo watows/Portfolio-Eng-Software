@@ -62,31 +62,28 @@ const VisualizarCardapio = () => {
 
   const exportToPDF = () => {
     const doc = new jsPDF();
-    let y = 20; // Posição inicial no eixo Y para o conteúdo
+    let y = 20;
   
     doc.setFontSize(16);
     doc.text("Cardápio Mensal", 10, 10);
     doc.setFontSize(12);
   
     cardapio.forEach((dia) => {
-      // Adiciona o título com a data
       doc.text(`${dia.date}:`, 10, y);
       y += 10;
   
       dia.items.forEach((item) => {
-        // Formatação do texto de cada item do cardápio
         const itemText = `- ${item.name} | ${item.quantity} | ${item.kcal} | ${item.tags}`;
         doc.text(itemText, 20, y);
-        y += 7; // Incrementa a posição Y para o próximo item
+        y += 7;
   
-        // Verifica se o conteúdo ultrapassa o limite da página
         if (y > 280) {
           doc.addPage();
-          y = 20; // Reinicia a posição Y para a nova página
+          y = 20;
         }
       });
   
-      y += 10; // Espaçamento entre os dias
+      y += 10;
     });
   
     doc.save("cardapio.pdf");

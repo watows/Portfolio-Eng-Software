@@ -159,7 +159,7 @@ const ExcluirReceita = () => {
                 fontWeight: "400",
               }}
             >
-              buscar
+              Buscar
             </span>
           </div>
         </div>
@@ -365,7 +365,7 @@ const ExcluirReceita = () => {
                     fontWeight: "400",
                   }}
                 >
-                  excluir
+                  Excluir
                 </span>
               </div>
             </div>

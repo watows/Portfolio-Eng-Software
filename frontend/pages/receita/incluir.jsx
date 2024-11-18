@@ -41,6 +41,10 @@ const IncluirReceita = () => {
     setReceita((prev) => ({ ...prev, [field]: value }));
   };
 
+  const isAnyFieldFilled = () => {
+    return Object.values(receita).some((value) => value.trim() !== "");
+  };
+
   const handleIncluir = async () => {
     const receitaTratada = {
       ...receita,
@@ -206,32 +210,83 @@ const IncluirReceita = () => {
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            justifyContent: "center",
+            gap: "30px",
             marginTop: "20px",
-            width: "100%",
-            maxWidth: "800px",
           }}
         >
-          <label style={{ fontSize: "14px", marginBottom: "5px" }}>Informações Adicionais</label>
-          <textarea
-            value={receita.info_adicional}
-            onChange={(e) => handleChange("info_adicional", e.target.value)}
-            style={{
-              backgroundColor: "rgba(0, 100, 166, 0.50)",
-              border: "none",
-              borderRadius: "20px",
-              padding: "10px",
-              width: "100%",
-              height: "50px",
-              color: "#ffffff",
-              fontSize: "14px",
-              fontFamily: "var(--font-family-ui)",
-              resize: "none",
-              outline: "none",
-            }}
-          />
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <label style={{ fontSize: "14px", marginBottom: "5px" }}>Fibra</label>
+            <input
+              type="text"
+              value={receita.fibra}
+              onChange={(e) => handleChange("fibra", e.target.value)}
+              style={{
+                backgroundColor: "rgba(0, 100, 166, 0.50)",
+                border: "none",
+                borderRadius: "20px",
+                padding: "10px",
+                width: "100%",
+                maxWidth: "250px",
+                textAlign: "center",
+                color: "#ffffff",
+                fontSize: "14px",
+                outline: "none",
+              }}
+            />
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <label style={{ fontSize: "14px", marginBottom: "5px" }}>Sódio</label>
+            <input
+              type="text"
+              value={receita.sodio}
+              onChange={(e) => handleChange("sodio", e.target.value)}
+              style={{
+                backgroundColor: "rgba(0, 100, 166, 0.50)",
+                border: "none",
+                borderRadius: "20px",
+                padding: "10px",
+                width: "100%",
+                maxWidth: "250px",
+                textAlign: "center",
+                color: "#ffffff",
+                fontSize: "14px",
+                outline: "none",
+              }}
+            />
+          </div>
         </div>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginTop: "20px",
+          width: "100%",
+          maxWidth: "800px",
+        }}
+      >
+        <label style={{ fontSize: "14px", marginBottom: "5px" }}>Informações Adicionais</label>
+        <textarea
+          value={receita.info_adicional}
+          onChange={(e) => handleChange("info_adicional", e.target.value)}
+          style={{
+            backgroundColor: "rgba(0, 100, 166, 0.50)",
+            border: "none",
+            borderRadius: "20px",
+            padding: "10px",
+            width: "100%",
+            height: "50px",
+            color: "#ffffff",
+            fontSize: "14px",
+            fontFamily: "var(--font-family-ui)",
+            resize: "none",
+            outline: "none",
+          }}
+        />
       </div>
 
       <div
@@ -247,10 +302,11 @@ const IncluirReceita = () => {
             height: "49px",
             width: "148px",
             position: "relative",
-            cursor: "pointer",
+            cursor: isAnyFieldFilled() ? "pointer" : "not-allowed",
             marginTop: "20px",
+            marginBottom: "20px"
           }}
-          onClick={handleIncluir}
+          onClick={isAnyFieldFilled() ? handleIncluir : null}
         >
           <div
             className="overlap-group"
@@ -262,7 +318,6 @@ const IncluirReceita = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "#ffffff80",
               border: "3px solid #0064a6",
             }}
           >
@@ -274,7 +329,6 @@ const IncluirReceita = () => {
                 fontSize: "16px",
                 fontWeight: "400",
                 textAlign: "center",
-                zIndex: 1,
               }}
             >
               Incluir

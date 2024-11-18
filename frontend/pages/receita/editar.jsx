@@ -162,7 +162,7 @@ const EditarReceita = () => {
                 fontWeight: "400",
               }}
             >
-              buscar
+              Buscar
             </span>
           </div>
         </div>
@@ -257,6 +257,55 @@ const EditarReceita = () => {
           <div
             style={{
               display: "flex",
+              justifyContent: "center",
+              gap: "30px",
+              marginTop: "20px",
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <label style={{ fontSize: "14px", marginBottom: "5px" }}>Fibra</label>
+              <input
+                type="text"
+                value={receita?.fibra || ""}
+                onChange={(e) => handleChange("fibra", e.target.value)}
+                style={{
+                  backgroundColor: "rgba(0, 100, 166, 0.50)",
+                  border: "none",
+                  borderRadius: "20px",
+                  padding: "10px",
+                  maxWidth: "250px",
+                  textAlign: "center",
+                  color: "#ffffff",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
+              />
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <label style={{ fontSize: "14px", marginBottom: "5px" }}>Sódio</label>
+              <input
+                type="text"
+                value={receita?.sodio || ""}
+                onChange={(e) => handleChange("sodio", e.target.value)}
+                style={{
+                  backgroundColor: "rgba(0, 100, 166, 0.50)",
+                  border: "none",
+                  borderRadius: "20px",
+                  padding: "10px",
+                  maxWidth: "250px",
+                  textAlign: "center",
+                  color: "#ffffff",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
+              />
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
               flexDirection: "column",
               alignItems: "center",
               marginTop: "20px",
@@ -320,7 +369,7 @@ const EditarReceita = () => {
                     fontWeight: "400",
                   }}
                 >
-                  editar
+                  Editar
                 </span>
               </div>
             </div>

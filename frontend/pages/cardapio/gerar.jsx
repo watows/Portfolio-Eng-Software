@@ -105,10 +105,10 @@ const GerarCardapio = () => {
   };
 
   const handleGravar = async () => {
-    if (!isCardapioGenerated) return; // Verifica se o cardápio foi gerado
+    if (!isCardapioGenerated) return;
 
     try {
-      const response = await fetch("http://localhost:5000/menu/salvar_cardapio", {
+      const response = await fetch("http://127.0.0.1:5000/menu/salvar_cardapio", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

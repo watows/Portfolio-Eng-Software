@@ -273,7 +273,7 @@ const App = () => {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/auth/user", {
+        const response = await fetch("http://127.0.0.1:5000/auth/user", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -301,7 +301,7 @@ const App = () => {
   const handleUpdate = async () => {
     const token = localStorage.getItem("authToken");
     try {
-      const response = await fetch("http://localhost:5000/auth/user", {
+      const response = await fetch("http://127.0.0.1:5000/auth/user", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

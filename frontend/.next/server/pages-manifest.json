@@ -3,14 +3,8 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/home": "pages/home.js",
-  "/cardapio/gerar": "pages/cardapio/gerar.js",
-  "/api/cardapio/gerar": "pages/api/cardapio/gerar.js",
-  "/receita/incluir": "pages/receita/incluir.js",
-  "/receita/editar": "pages/receita/editar.js",
-  "/api/receitas/buscar": "pages/api/receitas/buscar.js",
-  "/receita/excluir": "pages/receita/excluir.js",
-  "/receita/buscar": "pages/receita/buscar.js",
   "/api/receitas/editar": "pages/api/receitas/editar.js",
-  "/cardapio/visualizar": "pages/cardapio/visualizar.js",
-  "/api/cardapio/visualizar": "pages/api/cardapio/visualizar.js"
+  "/receita/editar": "pages/receita/editar.js",
+  "/receita/incluir": "pages/receita/incluir.js",
+  "/api/receitas/buscar": "pages/api/receitas/buscar.js"
 }
