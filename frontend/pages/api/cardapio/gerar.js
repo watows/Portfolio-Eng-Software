@@ -8,11 +8,10 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       if (action === "gerar") {
-        // Lógica para gerar cardápio
         const response = await fetch("http://127.0.0.1:5000/menu/gerar_cardapio", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(req.body),
+          body: JSON.stringify({ date: req.body.date }), // Enviar apenas a data
         });
 
         if (!response.ok) {
@@ -27,7 +26,6 @@ export default async function handler(req, res) {
         res.status(200).json(data);
 
       } else if (action === "verificar") {
-        // Lógica para verificar se existe um cardápio para o mês/ano
         const response = await fetch("http://127.0.0.1:5000/menu/verificar_cardapio", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -46,10 +44,8 @@ export default async function handler(req, res) {
         res.status(200).json(data);
 
       } else if (action === "salvar") {
-        // Lógica para salvar cardápio
         const { cardapio } = req.body;
 
-        // Validação dos dados do cardápio antes de enviar para o backend
         const cardapioCompletado = cardapio.map((day) => {
           if (!day || !day.date) {
             throw new Error(`Data ausente ou inválida no cardápio: ${JSON.stringify(day)}`);

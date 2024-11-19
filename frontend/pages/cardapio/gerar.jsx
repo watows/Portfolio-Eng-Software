@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { VscArrowCircleLeft } from "react-icons/vsc";
 import { AiOutlineCalendar } from "react-icons/ai";
@@ -72,7 +72,7 @@ const GerarCardapio = () => {
       const response = await fetch("/api/cardapio/gerar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "gerar", date: formattedDate, qtd_g: 150, kcal: 300 }),
+        body: JSON.stringify({ action: "gerar", date: formattedDate }),
       });
 
       if (!response.ok) {
@@ -90,8 +90,15 @@ const GerarCardapio = () => {
         if (!day || !day.date) {
           return { items: [] };
         }
-        const matchingData = data.find((item) => item.date === format(day.date, "yyyy-MM-dd"));
-        return matchingData || { items: [] };
+
+        const formattedDate = format(day.date, "yyyy-MM-dd");
+        const dailyMenu = data.find((menu) => menu.date === formattedDate) || { items: [] };
+
+        return {
+          date: formattedDate,
+          day: format(day.date, "EEEE", { locale: pt }),
+          items: dailyMenu.items,
+        };
       });
 
       setCardapio(completeCardapio);
@@ -102,6 +109,33 @@ const GerarCardapio = () => {
       alert("Erro inesperado ao gerar cardápio. Verifique o console para mais detalhes.");
     }
   };
+
+  const handleRefazer = async () => {
+    setCardapio([]); // Limpa o cardápio anterior
+    setIsCardapioGenerated(false); // Marca como não gerado
+
+    try {
+      const formattedDate = selectedDate.toISOString().split("T")[0];
+      const response = await fetch("/api/cardapio/gerar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "gerar", date: formattedDate }), // Reenvia a solicitação para gerar um novo cardápio
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Erro ao gerar cardápio: ${errorData.message}`);
+        return;
+      }
+
+      const data = await response.json();
+      setCardapio(data); // Atualiza com o novo cardápio
+      setIsCardapioGenerated(true); // Marca como gerado
+    } catch (error) {
+      console.error("Erro ao gerar cardápio:", error);
+      alert("Erro ao gerar cardápio. Verifique o console para mais detalhes.");
+    }
+  }; 
 
   const handleGravar = async () => {
     if (!isCardapioGenerated) {
@@ -142,12 +176,6 @@ const GerarCardapio = () => {
       console.error("Erro inesperado ao salvar cardápio:", error);
       alert(`Erro inesperado: ${error.message}`);
     }
-  };
-
-  const handleRefazer = () => {
-    setCardapio([]);
-    setIsCardapioGenerated(false);
-    handleGerarCardapio();
   };
 
   return (
@@ -233,7 +261,9 @@ const GerarCardapio = () => {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "15px", marginTop: "20px", width: "100%" }}>
         {workingDays.map((day, index) => {
           const dailyMenu = day
-            ? cardapio.find((menu) => menu.date === format(day.date, "yyyy-MM-dd")) || { items: [] }
+            ? isCardapioGenerated
+              ? cardapio.find((menu) => menu.date === format(day.date, "yyyy-MM-dd")) || { items: [] }
+              : { items: [] }
             : { items: [] };
 
           return (
@@ -257,25 +287,29 @@ const GerarCardapio = () => {
                     {format(day.date, "dd/MM/yyyy")} | {format(day.date, "EEEE", { locale: pt })}
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-                    {dailyMenu.items.map((item, i) => (
-                      <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "11.5px" }}>
-                        <span
-                          title={item.name}
-                          style={{
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
-                            width: "35%",
-                            textAlign: "left",
-                          }}
-                        >
-                          {item.name}
-                        </span>
-                        <span style={{ width: "20%", textAlign: "center" }}>{item.quantity}</span>
-                        <span style={{ width: "20%", textAlign: "center" }}>{item.kcal}</span>
-                        <span style={{ width: "15%", textAlign: "center" }}>{item.tags}</span>
-                      </div>
-                    ))}
+                    {isCardapioGenerated && dailyMenu.items.length > 0 ? (
+                      dailyMenu.items.map((item, i) => (
+                        <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "10.5px" }}>
+                          <span
+                            title={item.name}
+                            style={{
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                              width: "35%",
+                              textAlign: "left",
+                            }}
+                          >
+                            {item.name}
+                          </span>
+                          <span style={{ width: "20%", textAlign: "center" }}>{item.quantity}</span>
+                          <span style={{ width: "20%", textAlign: "center" }}>{item.kcal}</span>
+                          <span style={{ width: "15%", textAlign: "center" }}>{item.tags}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <div style={{ height: "100%" }}></div>
+                    )}
                   </div>
                 </>
               ) : (

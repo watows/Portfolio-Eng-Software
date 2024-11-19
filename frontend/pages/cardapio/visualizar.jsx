@@ -30,8 +30,8 @@ const VisualizarCardapio = () => {
     setSelectedDate(date);
     setIsDatePickerOpen(false);
     calculateWorkingDays(date);
-    setCardapio([]); // Limpa os dados ao mudar o mês
-    setIsCardapioLoaded(false); // Marca como não carregado até consultar novamente
+    setCardapio([]);
+    setIsCardapioLoaded(false);
   };
 
   const calculateWorkingDays = (date) => {
@@ -43,7 +43,6 @@ const VisualizarCardapio = () => {
       const currentDate = new Date(date.getFullYear(), date.getMonth(), day);
       const currentDayOfWeek = currentDate.getDay();
 
-      // Filtrando apenas os dias úteis (segunda a sexta-feira)
       if (currentDayOfWeek >= 1 && currentDayOfWeek <= 5) {
         workingDaysInMonth.push({
           date: currentDate,
@@ -52,18 +51,15 @@ const VisualizarCardapio = () => {
       }
     }
 
-    // Garantindo que os dias da semana estejam na ordem correta
     const alignedWorkingDays = [];
     let startDayOfWeek = workingDaysInMonth[0]?.dayOfWeek;
 
-    // Preenchemos os dias antes da segunda-feira com null, se necessário
     for (let i = 0; i < (startDayOfWeek - 1) % 7; i++) {
       alignedWorkingDays.push(null);
     }
 
     alignedWorkingDays.push(...workingDaysInMonth);
 
-    // Preenchemos os dias após sexta-feira com null, se necessário
     while (alignedWorkingDays.length % 5 !== 0) {
       alignedWorkingDays.push(null);
     }
@@ -75,8 +71,8 @@ const VisualizarCardapio = () => {
     if (!selectedDate) return;
 
     try {
-      setCardapio([]); // Limpa os dados antes de consultar novamente
-      setIsCardapioLoaded(false); // Marca como não carregado
+      setCardapio([]);
+      setIsCardapioLoaded(false);
 
       const response = await fetch("/api/cardapio/visualizar", {
         method: "POST",
@@ -97,13 +93,12 @@ const VisualizarCardapio = () => {
       const data = await response.json();
       console.log("Dados do cardápio recebidos:", data);
 
-      // Organiza o cardápio conforme os dias úteis, preenchendo com valores nulos para alinhamento
       const completeCardapio = workingDays.map((day) => {
         if (!day || !day.date) {
-          return { items: [] }; // Dias fora do mês ou não úteis
+          return { items: [] };
         }
         const matchingData = data.find((item) => item.date === format(day.date, "yyyy-MM-dd"));
-        return matchingData || { items: [] }; // Retorna o cardápio encontrado ou vazio
+        return matchingData || { items: [] };
       });
 
       setCardapio(completeCardapio);
@@ -275,7 +270,7 @@ const VisualizarCardapio = () => {
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
                     {dailyMenu.items.map((item, i) => (
-                      <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "11.5px" }}>
+                      <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "10.5px" }}>
                         <span
                           style={{
                             overflow: "hidden",

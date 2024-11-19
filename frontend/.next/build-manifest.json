@@ -23,10 +23,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/cardapio/visualizar": [
+    "/cardapio/gerar": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/cardapio/visualizar.js"
+      "static/chunks/pages/cardapio/gerar.js"
     ],
     "/home": [
       "static/chunks/webpack.js",
