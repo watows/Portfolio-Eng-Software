@@ -20,10 +20,10 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/cardapio/gerar": [
+    "/cardapio/visualizar": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/cardapio/gerar.js"
+      "static/chunks/pages/cardapio/visualizar.js"
     ],
     "/home": [
       "static/chunks/webpack.js",

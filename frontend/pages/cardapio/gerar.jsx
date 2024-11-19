@@ -33,14 +33,13 @@ const GerarCardapio = () => {
   const calculateWorkingDays = (date) => {
     const daysInMonth = getDaysInMonth(date);
     const firstDayOfMonth = startOfMonth(date);
-    const workingDaysInMonth = [];
-    let weekDayIndex = 0;
-
     const firstWeekDay = firstDayOfMonth.getDay();
-    for (let i = 1; i < firstWeekDay; i++) {
-      if (i > 0 && i < 6) {
+
+    const workingDaysInMonth = [];
+
+    for (let i = 0; i < firstWeekDay; i++) {
+      if (i >= 1 && i <= 5) {
         workingDaysInMonth.push(null);
-        weekDayIndex++;
       }
     }
 
@@ -53,10 +52,11 @@ const GerarCardapio = () => {
           date: currentDate,
           dayOfWeek: currentDayOfWeek,
         });
-        weekDayIndex++;
       }
+    }
 
-      if (weekDayIndex === 5) weekDayIndex = 0;
+    while (workingDaysInMonth.length % 5 !== 0) {
+      workingDaysInMonth.push(null);
     }
 
     setWorkingDays(workingDaysInMonth);
@@ -86,8 +86,12 @@ const GerarCardapio = () => {
       const data = await response.json();
       console.log("Dados recebidos do backend:", data);
 
-      const completeCardapio = workingDays.map((day, index) => {
-        return data[index] || { items: [{ name: "Cardápio padrão", quantity: "150g", kcal: "300 kcal", tags: "-" }] };
+      const completeCardapio = workingDays.map((day) => {
+        if (!day || !day.date) {
+          return { items: [] };
+        }
+        const matchingData = data.find((item) => item.date === format(day.date, "yyyy-MM-dd"));
+        return matchingData || { items: [] };
       });
 
       setCardapio(completeCardapio);
@@ -99,73 +103,52 @@ const GerarCardapio = () => {
     }
   };
 
-  const handleRefazer = () => {
-    setIsCardapioGenerated(false);
-    handleGerarCardapio();
-  };
-
-  const verificarCardapio = async () => {
-    const response = await fetch("/api/cardapio/gerar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "verificar",
-        month: selectedDate.getMonth() + 1,
-        year: selectedDate.getFullYear(),
-      }),
-    });
-    return response;
-  };
-
   const handleGravar = async () => {
     if (!isCardapioGenerated) {
-        alert("Por favor, gere o cardápio antes de tentar salvar.");
-        return;
+      alert("Por favor, gere o cardápio antes de salvar.");
+      return;
     }
 
     try {
-        const verificarResponse = await verificarCardapio();
-        if (verificarResponse.status === 404) {
-            console.log("Nenhum cardápio registrado. Continuando para salvar...");
-        } else if (!verificarResponse.ok) {
-            const errorData = await verificarResponse.json();
-            console.error("Erro ao verificar cardápio existente:", errorData);
-            alert(`Erro ao verificar cardápio: ${errorData.message}`);
-            return;
-        } else {
-            const verificarData = await verificarResponse.json();
-            if (verificarData.exists) {
-                alert("Já existe um cardápio registrado para este mês/ano.");
-                return;
-            }
-        }
-
-        const salvarResponse = await fetch("/api/cardapio/gerar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                action: "salvar",
-                month: selectedDate.getMonth() + 1,
-                year: selectedDate.getFullYear(),
-                cardapio,
-            }),
+      const cardapioValido = cardapio.filter((day) => day && day.date).map((day) => {
+        day.items.forEach((item) => {
+          if (!item.name || !item.quantity || !item.kcal) {
+            throw new Error(`Item inválido no cardápio: ${JSON.stringify(item)}`);
+          }
         });
+        return day;
+      });
 
-        if (!salvarResponse.ok) {
-            const errorData = await salvarResponse.json();
-            console.error("Erro ao salvar cardápio:", errorData);
-            alert(`Erro ao salvar cardápio: ${errorData.message}`);
-            return;
-        }
+      const salvarResponse = await fetch("/api/cardapio/gerar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "salvar",
+          month: selectedDate.getMonth() + 1,
+          year: selectedDate.getFullYear(),
+          cardapio: cardapioValido,
+        }),
+      });
 
-        const salvarData = await salvarResponse.json();
-        console.log("Cardápio salvo com sucesso:", salvarData);
-        alert("Cardápio salvo com sucesso!");
+      if (!salvarResponse.ok) {
+        const errorData = await salvarResponse.json();
+        console.error("Erro ao salvar cardápio:", errorData);
+        alert(`Erro ao salvar cardápio: ${errorData.message}`);
+        return;
+      }
+
+      alert("Cardápio salvo com sucesso!");
     } catch (error) {
-        console.error("Erro inesperado ao salvar cardápio:", error);
-        alert("Erro inesperado ao salvar cardápio. Verifique o console para mais detalhes.");
+      console.error("Erro inesperado ao salvar cardápio:", error);
+      alert(`Erro inesperado: ${error.message}`);
     }
-};
+  };
+
+  const handleRefazer = () => {
+    setCardapio([]);
+    setIsCardapioGenerated(false);
+    handleGerarCardapio();
+  };
 
   return (
     <div
@@ -249,7 +232,9 @@ const GerarCardapio = () => {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "15px", marginTop: "20px", width: "100%" }}>
         {workingDays.map((day, index) => {
-          const dailyMenu = cardapio[index] || { items: [] };
+          const dailyMenu = day
+            ? cardapio.find((menu) => menu.date === format(day.date, "yyyy-MM-dd")) || { items: [] }
+            : { items: [] };
 
           return (
             <div
@@ -273,8 +258,19 @@ const GerarCardapio = () => {
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
                     {dailyMenu.items.map((item, i) => (
-                      <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "12px" }}>
-                        <span style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", width: "35%" }}>{item.name}</span>
+                      <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "11.5px" }}>
+                        <span
+                          title={item.name}
+                          style={{
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                            width: "35%",
+                            textAlign: "left",
+                          }}
+                        >
+                          {item.name}
+                        </span>
                         <span style={{ width: "20%", textAlign: "center" }}>{item.quantity}</span>
                         <span style={{ width: "20%", textAlign: "center" }}>{item.kcal}</span>
                         <span style={{ width: "15%", textAlign: "center" }}>{item.tags}</span>

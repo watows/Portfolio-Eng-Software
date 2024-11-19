@@ -53,29 +53,61 @@ def salvar_cardapio():
         month = data.get("month")
         year = data.get("year")
         cardapio = data.get("cardapio", [])
-        
+
+        if not cardapio:
+            raise ValueError("O cardápio enviado está vazio.")
+
         conn = get_db_connection()
         cursor = conn.cursor()
-        
+
+        # Verificar se já existe um cardápio salvo para o mês e ano
+        cursor.execute("""
+            SELECT COUNT(*) FROM cardapios
+            WHERE month = %s AND year = %s
+        """, (month, year))
+        resultado = cursor.fetchone()
+
+        if resultado[0] > 0:
+            return jsonify({"message": "Já existe um cardápio salvo para este mês/ano."}), 400
+
+        # Inserir cada dia do cardápio
         for dia in cardapio:
             date_day = dia.get("date")
+            if not date_day:
+                raise ValueError(f"Data ausente para o cardápio: {dia}")
+
             for item in dia.get("items", []):
+                # Garantir que cada item possui os campos necessários
+                if not all(k in item for k in ("name", "quantity", "kcal")):
+                    raise ValueError(f"Item incompleto encontrado: {item}")
+
                 cursor.execute(
                     """
                     INSERT INTO cardapios (month, year, date, txt_breve_material, qtd_g, kcal, tags)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """,
-                    (month, year, date_day, item["name"], item["quantity"], item["kcal"], item.get("tags", ""))
+                    (
+                        month,
+                        year,
+                        date_day,
+                        item["name"],
+                        item["quantity"],
+                        item["kcal"],
+                        item.get("tags", "-"),
+                    )
                 )
-        
+
         conn.commit()
         cursor.close()
         conn.close()
-        
+
         return jsonify({"message": "Cardápio salvo com sucesso"}), 201
+    except ValueError as ve:
+        logger.error(f"Erro de validação ao salvar cardápio: {ve}")
+        return jsonify({"message": str(ve)}), 400
     except Exception as e:
         logger.error(f"Erro ao salvar cardápio: {e}")
-        return jsonify({"message": "Erro ao salvar cardápio"}), 500
+        return jsonify({"message": "Erro ao salvar cardápio", "detalhes": str(e)}), 500
 
 @cardapio_blueprint.route('/consultar_cardapio', methods=['POST'])
 def consultar_cardapio():
