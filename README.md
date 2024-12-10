@@ -25,19 +25,18 @@ Desenvolver um sistema inteligente para a programação de cardápios mensais pe
 
 # Tecnologias Utilizadas
 ## Frontend
-* Next.js: Framework para construção de interfaces web modernas e performáticas.
-* CSS/SCSS: Para estilização das páginas e componentes.
-* HTML: Linguagem de marcação para estruturar as páginas.
+* React: Biblioteca para construção de interfaces.
+* Next.js: Framework para renderização e rotas do frontend.
+* HTML e CSS: Linguagens para estruturar e estilizar as páginas.
 
 ## Backend
-* Python: Linguagem de programação para a criação do algoritmo de IA.
-* Flask: Framework web para implementar as rotas e a lógica do backend.
-* Pandas: Biblioteca para manipulação de dados e integração com arquivos Excel.
-* Scikit-learn: Para o desenvolvimento do algoritmo de IA, utilizando técnicas como K-Nearest Neighbors (KNN) para sugerir combinações de receitas.
-* SQLite: Banco de dados leve para armazenar receitas e cardápios.
+* Python: Para a lógica do sistema e manipulação de dados.
+* Flask: Framework web para implementação de rotas e lógica do backend.
+* PostgreSQL: Banco de dados relacional para armazenamento de receitas e cardápios.
 
 ## Teste e Qualidade
-~Desenvolver aqui ainda!
+* React Testing Library: Biblioteca mais recomendada para testes de componentes React.
+* Jest: Framework de Testes em JavaScript com um foco na simplicidade.
 
 # Requisitos do Projeto
 ## Requisitos Funcionais:
@@ -54,7 +53,7 @@ Desenvolver um sistema inteligente para a programação de cardápios mensais pe
 * RNF5: O sistema deve ser intuitivo para os usuários.
 
 # Metodologia de Organização de Tarefas
-O desenvolvimento do projeto será organizado em etapas com base na abordagem ágil. As principais tarefas serão organizadas em um backlog e priorizadas conforme as funcionalidades mais importantes para o cliente. Cada fase incluirá design, desenvolvimento e testes para garantir a qualidade do sistema.
+O desenvolvimento do projeto foi organizado em etapas com base na abordagem FDD (Feature-Driven Development). As principais funcionalidades foram definidas e priorizadas no início do projeto, e cada funcionalidade foi desenvolvida de forma independente. Cada fase do desenvolvimento incluia o design e a implementação.
 
 ## Pacotes de Entrega
 ### Pacote 1: Configuração Inicial
@@ -65,33 +64,45 @@ O desenvolvimento do projeto será organizado em etapas com base na abordagem á
 * Implementação do cadastro e gerenciamento de receitas no banco de dados.
 * Interface para visualização e seleção de receitas.
 
-### Pacote 3: Algoritmo de IA
-* Desenvolvimento do algoritmo de IA para sugerir combinações de pratos.
-* Implementação de relatórios para visualização dos cardápios.
-
-### Pacote 4: Interface do Usuário
+### Pacote 3: Interface do Usuário
 * Desenvolvimento da interface com Next.js para gerenciar receitas e visualizar cardápios.
 
-## Infaestrutura
-~Desenvolver aqui ainda!
-
-# Acesso da Aplicação em Produção
-~Desenvolver aqui ainda!
+### Pacote 4: Geração de Cardápios
+* Desenvolvimento do algoritmo para sugerir combinações de pratos.
+* Implementação de relatórios para visualização dos cardápios.
 
 # Para Contribuir com o Projeto
 Se você deseja contribuir para o projeto Sistema especialista para geração de cardápios personalizados, seja para implementar novas funcionalidades, corrigir bugs ou para estudos acadêmicos, siga os passos abaixo. Não esqueça de abrir um Pull Request para que possamos revisar e discutir suas mudanças.
 
 ## Configuração Inicial
-~Desenvolver aqui ainda!
+1. Faça o clone do repositório:
+   * git clone https://github.com/watows/Portfolio-Eng-Software
+     
+2. Instale as dependências do projeto utilizando npm:
+   * npm install
 
 ## Executando o Projeto
-~Desenvolver aqui ainda!
+1. Para iniciar o servidor do back-end:
+   * npm run start-backend
+     
+2. Para iniciar o cliente React:
+   * npm run start-frontend
 
 ## Testes
-~Desenvolver aqui ainda!
+Para executar os testes do back-end e do front-end:
+  * npm test
+
+Para verificar a cobertura dos testes
+  *npm run test:coverage
 
 ## Banco de Dados
-~Desenvolver aqui ainda!
+Este projeto utiliza o PostgreSQL como banco de dados. Para configurar o banco de dados:
+
+1. Instale o PostgreSQL localmente ou crie uma instância em um serviço de hospedagem de bancos de dados.
+2. Configure a string de conexão no arquivo config.py ou nas variáveis de ambiente, conforme necessário.
+
+Exemplo de string de conexão no arquivo config.py:
+DATABASE_URI = os.getenv('DATABASE_URI', 'postgresql://postgres:watows@localhost/receitas')
 
 ## Pull Requests
 1. Crie uma nova branch a partir da `master` para suas alterações.
