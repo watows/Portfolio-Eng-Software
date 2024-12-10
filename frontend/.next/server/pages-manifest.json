@@ -3,7 +3,8 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/home": "pages/home.js",
-  "/cardapio/gerar": "pages/cardapio/gerar.js",
-  "/api/cardapio/gerar": "pages/api/cardapio/gerar.js",
-  "/relatorio/nutricional": "pages/relatorio/nutricional.js"
+  "/cardapio/visualizar": "pages/cardapio/visualizar.js",
+  "/configuracoes": "pages/configuracoes.js",
+  "/login": "pages/login.js",
+  "/api/cardapio/visualizar": "pages/api/cardapio/visualizar.js"
 }

@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         const response = await fetch("http://127.0.0.1:5000/menu/gerar_cardapio", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ date: req.body.date }), // Enviar apenas a data
+          body: JSON.stringify({ date: req.body.date }),
         });
 
         if (!response.ok) {
